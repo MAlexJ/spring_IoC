@@ -9,17 +9,20 @@ import com.malexj.services.impl.Service2;
  */
 public class InitialContext
 {
-    public Object lookup(String jndiName)   // todo <<< java 8 and create test <<<<<<<<< AND create Annotation to print on start and end method
+    private static final String FIRST_SERVICE = "SERVICE1";
+    private static final String SECOND_SERVICE = "SERVICE2";
+
+    public Object lookup(String jndiName)
     {
-        if (jndiName.equalsIgnoreCase("SERVICE1"))
+        if (jndiName.equalsIgnoreCase(FIRST_SERVICE))
         {
             System.out.println("Looking up and creating a new Service1 object");
             return new Service1();
-        } else if (jndiName.equalsIgnoreCase("SERVICE2"))
+        } else if (jndiName.equalsIgnoreCase(SECOND_SERVICE))
         {
             System.out.println("Looking up and creating a new Service2 object");
             return new Service2();
         }
-        return null;
+        throw new IllegalArgumentException("The service with name: " + jndiName + " not found!");
     }
 }

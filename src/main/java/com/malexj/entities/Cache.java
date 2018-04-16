@@ -1,5 +1,6 @@
 package com.malexj.entities;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.malexj.services.Service;
 
 import java.util.ArrayList;
@@ -17,32 +18,34 @@ public class Cache
         services = new ArrayList<>();
     }
 
-    public Service getService(String serviceName)  // todo <<< java 8 and create test <<<<<<<<<
+    public Service getService(String serviceName)
     {
-        for (Service service : services)
-        {
-            if (service.getName().equalsIgnoreCase(serviceName))
-            {
-                System.out.println("Returning cached  " + serviceName + " object");
-                return service;
-            }
-        }
-        return null;
+        return services.stream()
+                .filter(service -> service.getName().equalsIgnoreCase(serviceName))
+                .findFirst()
+                .orElse(null);
     }
 
-    public void addService(Service newService) // todo <<< java 8 and create test <<<<<<<<<
+    public void addService(Service newService)
     {
-        boolean exists = false;
-        for (Service service : services)
-        {
-            if (service.getName().equalsIgnoreCase(newService.getName()))
-            {
-                exists = true;
-            }
-        }
-        if (!exists)
+        if (!isExistsService(newService))
         {
             services.add(newService);
         }
+    }
+
+    private boolean isExistsService(Service newService)
+    {
+        return services.stream()
+                .anyMatch(service -> service.getName().equalsIgnoreCase(newService.getName()));
+    }
+
+    /**
+     * For test only
+     */
+    @VisibleForTesting
+    protected List<Service> getServices()
+    {
+        return services;
     }
 }
